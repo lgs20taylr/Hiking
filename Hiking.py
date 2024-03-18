@@ -2,22 +2,24 @@ import time
 import os.path
 
 def main():
-    new = input("Create new file? (y/n)").lower() == "y"
-    fileChoice = getFileChoice(new)
-    while not validateFile(fileChoice) and not new:
-        print("That file does not exist.")
-        new = input("Create new file instead? (y/n)").lower() == "y"
-        fileChoice = getFileChoice(new)
-    writeLog(fileChoice, new)
+   if not os.path.exists("logs"):
+      os.mkdir("logs")
+   new = input("Create new file? (y/n)").lower() == "y"
+   fileChoice = getFileChoice(new)
+   while not validateFile(fileChoice) and not new:
+      print("That file does not exist.")
+      new = input("Create new file instead? (y/n)").lower() == "y"
+      fileChoice = getFileChoice(new)
+   writeLog(fileChoice, new)
 
 def getFileChoice(new):
-    if new:
-        fileChoice = input("Enter the name of the log to create it.\n")+".txt"
-        fileChoice = "Hiking\logs"+"\\"+fileChoice
-    else:
-        fileChoice = input("Enter the name of the log to open it.\n")+".txt"
-        fileChoice = "Hiking\logs"+"\\"+fileChoice
-    return fileChoice
+   if new:
+      fileChoice = input("Enter the name of the log to create it.\n")+".txt"
+      fileChoice = ".\logs"+"\\"+fileChoice
+   else:
+      fileChoice = input("Enter the name of the log to open it.\n")+".txt"
+      fileChoice = ".\logs"+"\\"+fileChoice
+   return fileChoice
 
 def validateFile(file):
     return os.path.isfile(file)
@@ -29,6 +31,9 @@ def validateEntry(entry, new, prevEntry=(0,0), finished=False):
          return False
       if entry[-1] != ")":
          print("Closing bracket missing or incorrectly placed.")
+         return False
+      if "," not in entry:
+         print("Comma missing.")
          return False
       tupEntry = entryToTuple(entry)
       lat, long = tupEntry
